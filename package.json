@@ -4,6 +4,10 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "prepare": "npm run build",
+    "build": "rimraf dist/ && tsc",
+    "fixlint": "tslint --fix -c ./tslint.json -p ./tsconfig.json",
+    "lint": "tslint -c ./tslint.json -p ./tsconfig.json",
     "test": "nyc mocha test/*.test.ts"
   },
   "repository": {
@@ -28,6 +32,7 @@
     "mocha": "^6.1.4",
     "nyc": "^14.0.0",
     "rewiremock": "^3.13.5",
+    "rimraf": "^2.6.3",
     "sinon": "^7.3.2",
     "ts-node": "^8.1.0",
     "tslint": "^5.16.0",
