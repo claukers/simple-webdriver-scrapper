@@ -35,7 +35,6 @@ export const defaultOptions: IScrapperOptions = {
 }
 
 export class Scrapper {
-  public driver;
   public constructor(public options: IScrapperOptions) {
     if (this.options.browser === undefined) {
       this.options.browser = defaultOptions.browser;
@@ -54,21 +53,20 @@ export class Scrapper {
       }
     }
   }
-  public async init() {
+  public async getDriver() {
     const screen = {
       width: 640,
       height: 480
     };
-    this.driver = await new Builder().forBrowser(this.options.browser)
+    const driver = await new Builder().forBrowser(this.options.browser)
       .setChromeOptions(new chrome.Options().headless().windowSize(screen))
       .setFirefoxOptions(new firefox.Options().headless().windowSize(screen))
       .build();
-  }
-  public async dispose() {
-    this.driver.quit();
+    return driver;
   }
   public async scrap(options: IScrapOptions): Promise<IScrapResult> {
-    await this.driver.get(options.url);
+    const driver = await this.getDriver();
+    await driver.get(options.url);
     let equilibriumCount = 0;
     let lastResult = null;
     const stopMS = this.options.domCheck.timeout + new Date().getTime();
@@ -78,7 +76,7 @@ export class Scrapper {
         equilibriumCount < this.options.domCheck.equilibriumThreshold
       ) {
         await this.sleep(this.options.domCheck.interval);
-        const result = await this.updateResult(this.driver, lastResult);
+        const result = await this.updateResult(driver, lastResult);
         if (result.equilibrium) {
           equilibriumCount++;
         }
@@ -89,8 +87,9 @@ export class Scrapper {
     if (this.options.domCheck) {
       await loop();
     } else {
-      lastResult = await this.updateResult(this.driver, lastResult);
+      lastResult = await this.updateResult(driver, lastResult);
     }
+    driver.quit();
     return lastResult;
   }
   private async sleep(ms: number) {
