@@ -5,8 +5,8 @@ import * as firefox from "selenium-webdriver/firefox";
 /* tslint:enable */
 
 export interface IScrapperOptions {
-  disableJavascript: boolean;
-  browser: "firefox" | "chrome";
+  disableJavascript?: boolean;
+  browser?: "firefox" | "chrome";
   domCheck?: {
     equilibriumThreshold: number;
     timeout: number;
@@ -37,7 +37,10 @@ export const defaultOptions: IScrapperOptions = {
 };
 
 export class Scrapper {
-  public constructor(public options: IScrapperOptions) {
+  public constructor(public options?: IScrapperOptions) {
+    if (!options) {
+      this.options = defaultOptions;
+    }
     if (this.options.browser === undefined) {
       this.options.browser = defaultOptions.browser;
     }
