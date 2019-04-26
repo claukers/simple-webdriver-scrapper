@@ -1,0 +1,23 @@
+<html>
+
+<head>
+  <script>
+    var i = 0;
+    var interval = setInterval(function () {
+      i++;
+      if(i === 30) {
+        clearInterval(interval);
+      }
+      console.log("interval " + i);
+      document.getElementById("main").innerHTML = i;
+    }, 1000);
+  </script>
+</head>
+
+<body>
+  <div id="main">
+
+  </div>
+</body>
+
+</html>
