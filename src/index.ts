@@ -71,31 +71,36 @@ export class Scrapper {
   }
   public async scrap(options: IScrapOptions): Promise<IScrapResult> {
     const driver = await this.getDriver();
-    await driver.get(options.url);
-    let equilibriumCount = 0;
-    let lastResult = null;
-    const stopMS = this.options.domCheck.timeout + new Date().getTime();
-    const loop = async () => {
-      while (
-        new Date().getTime() < stopMS &&
-        equilibriumCount < this.options.domCheck.equilibriumThreshold
-      ) {
-        await this.sleep(this.options.domCheck.interval);
-        const result = await this.updateResult(driver, lastResult);
-        if (result.equilibrium) {
-          equilibriumCount++;
+    try {
+      await driver.get(options.url);
+      let equilibriumCount = 0;
+      let lastResult = null;
+      const stopMS = this.options.domCheck.timeout + new Date().getTime();
+      const loop = async () => {
+        while (
+          new Date().getTime() < stopMS &&
+          equilibriumCount < this.options.domCheck.equilibriumThreshold
+        ) {
+          await this.sleep(this.options.domCheck.interval);
+          const result = await this.updateResult(driver, lastResult);
+          if (result.equilibrium) {
+            equilibriumCount++;
+          }
+          lastResult = result;
         }
-        lastResult = result;
+        return lastResult;
+      };
+      if (this.options.domCheck) {
+        await loop();
+      } else {
+        lastResult = await this.updateResult(driver, lastResult);
       }
+      await driver.quit();
       return lastResult;
-    };
-    if (this.options.domCheck) {
-      await loop();
-    } else {
-      lastResult = await this.updateResult(driver, lastResult);
+    } catch (e) {
+      await driver.quit();
+      throw e;
     }
-    await driver.quit();
-    return lastResult;
   }
   private async sleep(ms: number) {
     await new Promise((resolve) => {
