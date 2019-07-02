@@ -1,8 +1,9 @@
+/* tslint:enable */
+import {EventEmitter} from "events";
 import { Builder } from "selenium-webdriver";
 /* tslint:disable */
 import * as chrome from "selenium-webdriver/chrome";
 import * as firefox from "selenium-webdriver/firefox";
-/* tslint:enable */
 
 export interface IScrapperOptions {
   disableJavascript?: boolean;
@@ -39,19 +40,19 @@ export const defaultOptions: IScrapperOptions = {
   }
 };
 
-export class Scrapper {
+export class Scrapper extends EventEmitter {
   public constructor(public options?: IScrapperOptions) {
+    super();
     this.configure(options);
   }
   public configure(options?: IScrapperOptions) {
-    if(!scrapMode) {
       if (!options) {
         this.options = defaultOptions;
       }
       if (this.options.browser === undefined) {
         this.options.browser = defaultOptions.browser;
       }
-      if(this.options.keepDriverAlive === undefined) {
+      if (this.options.keepDriverAlive === undefined) {
         this.options.keepDriverAlive = defaultOptions.keepDriverAlive;
       }
       if (this.options.domCheck === undefined) {
@@ -67,7 +68,6 @@ export class Scrapper {
           this.options.domCheck.interval = defaultOptions.domCheck.interval;
         }
       }
-    }
   }
   public async getDriver() {
     const screen = {
@@ -86,7 +86,7 @@ export class Scrapper {
     }
     const driver = !options.driver ? await this.getDriver() : options.driver;
     try {
-      if(options.url) {
+      if (options.url) {
         await driver.get(options.url);
       }
       let equilibriumCount = 0;
@@ -116,10 +116,11 @@ export class Scrapper {
       }
       return lastResult;
     } catch (e) {
+      this.emit("error", e);
       try {
         await driver.quit();
-      } catch(e) {
-        console.error(e);
+      } catch (e) {
+        this.emit("error", e);
       }
       throw e;
     }
