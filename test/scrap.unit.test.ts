@@ -4,7 +4,7 @@ import * as sinon from 'sinon';
 import * as rewiremock from 'rewiremock';
 import * as path from "path";
 
-describe("unit tests", function () {
+describe("scrap unit tests", function () {
   let lastDriver = null;
   this.timeout(60 * 1000);
   const fakeBuilder = {

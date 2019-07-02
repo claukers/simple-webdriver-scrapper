@@ -6,7 +6,7 @@
   "branches": 10,
   "all": true,
   "include": ["src/*"],
-  "exclude": ["src/index.ts", "**/*.d.ts"],
+  "exclude": ["src/index.tsss", "**/*.d.ts"],
   "extension": [".ts"],
   "reporter": ["html", "lcov", "text"],
   "sourceMap": true,

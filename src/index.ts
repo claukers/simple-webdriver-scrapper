@@ -41,26 +41,31 @@ export const defaultOptions: IScrapperOptions = {
 
 export class Scrapper {
   public constructor(public options?: IScrapperOptions) {
-    if (!options) {
-      this.options = defaultOptions;
-    }
-    if (this.options.browser === undefined) {
-      this.options.browser = defaultOptions.browser;
-    }
-    if(this.options.keepDriverAlive === undefined) {
-      this.options.keepDriverAlive = defaultOptions.keepDriverAlive;
-    }
-    if (this.options.domCheck === undefined) {
-      this.options.domCheck = defaultOptions.domCheck;
-    } else if (this.options.domCheck) {
-      if (this.options.domCheck.equilibriumThreshold === undefined) {
-        this.options.domCheck.equilibriumThreshold = defaultOptions.domCheck.equilibriumThreshold;
+    this.configure(options);
+  }
+  public configure(options?: IScrapperOptions) {
+    if(!scrapMode) {
+      if (!options) {
+        this.options = defaultOptions;
       }
-      if (this.options.domCheck.timeout === undefined) {
-        this.options.domCheck.timeout = defaultOptions.domCheck.timeout;
+      if (this.options.browser === undefined) {
+        this.options.browser = defaultOptions.browser;
       }
-      if (this.options.domCheck.interval === undefined) {
-        this.options.domCheck.interval = defaultOptions.domCheck.interval;
+      if(this.options.keepDriverAlive === undefined) {
+        this.options.keepDriverAlive = defaultOptions.keepDriverAlive;
+      }
+      if (this.options.domCheck === undefined) {
+        this.options.domCheck = defaultOptions.domCheck;
+      } else if (this.options.domCheck) {
+        if (this.options.domCheck.equilibriumThreshold === undefined) {
+          this.options.domCheck.equilibriumThreshold = defaultOptions.domCheck.equilibriumThreshold;
+        }
+        if (this.options.domCheck.timeout === undefined) {
+          this.options.domCheck.timeout = defaultOptions.domCheck.timeout;
+        }
+        if (this.options.domCheck.interval === undefined) {
+          this.options.domCheck.interval = defaultOptions.domCheck.interval;
+        }
       }
     }
   }
