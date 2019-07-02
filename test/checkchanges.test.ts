@@ -42,7 +42,7 @@ describe("check changes", function () {
       expect(result.text).to.be.equals('30');
       expect(result.checks).to.be.equals(33);
       expect(result.html.length).to.be.equals(331);
-      expect(result.driver).to.not.be.equal(null);
+      expect(result.driver).to.not.be.equal(lastDriver);
       lastDriver = result.driver;
     };
     test().then(done).catch(done);

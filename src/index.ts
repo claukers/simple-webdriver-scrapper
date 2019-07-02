@@ -7,6 +7,7 @@ import * as firefox from "selenium-webdriver/firefox";
 export interface IScrapperOptions {
   disableJavascript?: boolean;
   browser?: "firefox" | "chrome";
+  keepDriverAlive?: boolean;
   domCheck?: {
     equilibriumThreshold: number;
     timeout: number;
@@ -16,6 +17,7 @@ export interface IScrapperOptions {
 
 export interface IScrapOptions {
   url: string;
+  driver?: any;
 }
 
 export interface IScrapResult {
@@ -29,6 +31,7 @@ export interface IScrapResult {
 export const defaultOptions: IScrapperOptions = {
   disableJavascript: false,
   browser: "firefox",
+  keepDriverAlive: false,
   domCheck: {
     equilibriumThreshold: 3,
     timeout: 60000,
@@ -43,6 +46,9 @@ export class Scrapper {
     }
     if (this.options.browser === undefined) {
       this.options.browser = defaultOptions.browser;
+    }
+    if(this.options.keepDriverAlive === undefined) {
+      this.options.keepDriverAlive = defaultOptions.keepDriverAlive;
     }
     if (this.options.domCheck === undefined) {
       this.options.domCheck = defaultOptions.domCheck;
@@ -70,7 +76,7 @@ export class Scrapper {
     return driver;
   }
   public async scrap(options: IScrapOptions): Promise<IScrapResult> {
-    const driver = await this.getDriver();
+    const driver = !options.driver ? await this.getDriver() : options.driver;
     try {
       await driver.get(options.url);
       let equilibriumCount = 0;
@@ -95,7 +101,9 @@ export class Scrapper {
       } else {
         lastResult = await this.updateResult(driver, lastResult);
       }
-      await driver.quit();
+      if (!this.options.keepDriverAlive) {
+        await driver.quit();
+      }
       return lastResult;
     } catch (e) {
       await driver.quit();
