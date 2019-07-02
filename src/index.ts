@@ -76,9 +76,14 @@ export class Scrapper {
     return driver;
   }
   public async scrap(options: IScrapOptions): Promise<IScrapResult> {
+    if (!options.url && !options.driver) {
+      throw new Error("not passing driver and url is not allowed!");
+    }
     const driver = !options.driver ? await this.getDriver() : options.driver;
     try {
-      await driver.get(options.url);
+      if(options.url) {
+        await driver.get(options.url);
+      }
       let equilibriumCount = 0;
       let lastResult = null;
       const stopMS = this.options.domCheck.timeout + new Date().getTime();
@@ -106,7 +111,11 @@ export class Scrapper {
       }
       return lastResult;
     } catch (e) {
-      await driver.quit();
+      try {
+        await driver.quit();
+      } catch(e) {
+        console.error(e);
+      }
       throw e;
     }
   }
