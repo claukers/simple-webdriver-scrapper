@@ -29,6 +29,81 @@ describe("scrap unit tests", function () {
     rewiremock.default.disable();
     done();
   });
+  it("driver.get throws and driver.quit throws is handled", (done) => {
+    const test = async () => {
+      const lib = require("../src");
+      const scrapper = new lib.Scrapper({
+        domCheck: false
+      });
+      let errorsEmitted = 0;
+      scrapper.on("error", (e)=>{
+        expect(e.message).to.be.equals("bla");
+        errorsEmitted++;
+      });
+      await new Promise((resolve, reject) => {
+        scrapper.scrap({
+          driver: {
+            get: sinon.fake(async (url)=> {
+              expect(url).to.be.equal("url");
+              throw new Error("bla");
+            }),
+            quit: sinon.fake(async ()=> {
+              throw new Error("bla");
+            })
+          },
+          url: "url"
+        }).then(()=>{
+          reject(new Error("bad state"));
+        }).catch((e)=>{
+          try {
+            expect(e.message).to.be.equals("bla");
+            expect(errorsEmitted).to.be.equal(2);
+            resolve();
+          } catch(e) {
+            reject(e);
+          }
+        });
+      });
+    };
+    test().then(done).catch(done);
+  });
+  it("driver.get throws is handled", (done) => {
+    const test = async () => {
+      const lib = require("../src");
+      const scrapper = new lib.Scrapper({
+        domCheck: false
+      });
+      let errorsEmitted = 0;
+      scrapper.on("error", (e)=>{
+        expect(e.message).to.be.equals("get bla");
+        errorsEmitted++;
+      });
+      await new Promise((resolve, reject) => {
+        scrapper.scrap({
+          driver: {
+            get: sinon.fake(async (url)=> {
+              expect(url).to.be.equal("url");
+              throw new Error("get bla");
+            }),
+            quit: sinon.fake(async ()=> {
+            })
+          },
+          url: "url"
+        }).then(()=>{
+          reject(new Error("bad state"));
+        }).catch((e)=>{
+          try {
+            expect(e.message).to.be.equals("get bla");
+            expect(errorsEmitted).to.be.equal(1);
+            resolve();
+          } catch(e) {
+            reject(e);
+          }
+        });
+      });
+    };
+    test().then(done).catch(done);
+  });
   it("not passing driver and no url is not allowed", (done) => {
     const test = async () => {
       const lib = require("../src");

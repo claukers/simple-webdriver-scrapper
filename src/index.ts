@@ -10,10 +10,17 @@ export interface IScrapperOptions {
   browser?: "firefox" | "chrome";
   keepDriverAlive?: boolean;
   domCheck?: {
-    equilibriumThreshold: number;
-    timeout: number;
-    interval: number;
+    equilibriumThreshold?: number;
+    timeout?: number;
+    interval?: number;
   };
+  driverOptions?: {
+    headless?: boolean;
+    screen?: {
+      width?: number;
+      height?: number;
+    }
+  }
 }
 
 export interface IScrapOptions {
@@ -29,55 +36,87 @@ export interface IScrapResult {
   driver: any;
 }
 
-export const defaultOptions: IScrapperOptions = {
-  disableJavascript: false,
-  browser: "firefox",
-  keepDriverAlive: false,
-  domCheck: {
-    equilibriumThreshold: 3,
-    timeout: 60000,
-    interval: 1000
-  }
+export const newDefaultOptions = () => {
+  const defaultOptions: IScrapperOptions = {
+    disableJavascript: false,
+    browser: "firefox",
+    keepDriverAlive: false,
+    domCheck: {
+      equilibriumThreshold: 3,
+      timeout: 60000,
+      interval: 1000
+    },
+    driverOptions: {
+      headless: true,
+      screen: {
+        width: 1920,
+        height: 1080
+      }
+    }
+  };
+  return defaultOptions;
 };
 
 export class Scrapper extends EventEmitter {
-  public constructor(public options?: IScrapperOptions) {
+  public options: IScrapperOptions;
+  public constructor(options?: IScrapperOptions) {
     super();
+    this.options = newDefaultOptions();
     this.configure(options);
   }
-  public configure(options?: IScrapperOptions) {
-      if (!options) {
-        this.options = defaultOptions;
+  public configure(cfg?: IScrapperOptions) {
+    const baseOptions = this.options;
+    if (!cfg) {
+      cfg = baseOptions;
+    }
+    if (cfg.disableJavascript === undefined) {
+      cfg.disableJavascript = baseOptions.disableJavascript;
+    }
+    if (cfg.browser === undefined) {
+      cfg.browser = baseOptions.browser;
+    }
+    if (cfg.keepDriverAlive === undefined) {
+      cfg.keepDriverAlive = baseOptions.keepDriverAlive;
+    }
+    if (cfg.domCheck === undefined) {
+      cfg.domCheck = baseOptions.domCheck;
+    } else if (cfg.domCheck) {
+      if (cfg.domCheck.equilibriumThreshold === undefined) {
+        cfg.domCheck.equilibriumThreshold = baseOptions.domCheck.equilibriumThreshold;
       }
-      if (this.options.browser === undefined) {
-        this.options.browser = defaultOptions.browser;
+      if (cfg.domCheck.timeout === undefined) {
+        cfg.domCheck.timeout = baseOptions.domCheck.timeout;
       }
-      if (this.options.keepDriverAlive === undefined) {
-        this.options.keepDriverAlive = defaultOptions.keepDriverAlive;
+      if (cfg.domCheck.interval === undefined) {
+        cfg.domCheck.interval = baseOptions.domCheck.interval;
       }
-      if (this.options.domCheck === undefined) {
-        this.options.domCheck = defaultOptions.domCheck;
-      } else if (this.options.domCheck) {
-        if (this.options.domCheck.equilibriumThreshold === undefined) {
-          this.options.domCheck.equilibriumThreshold = defaultOptions.domCheck.equilibriumThreshold;
+    }
+    if (cfg.driverOptions === undefined) {
+      cfg.driverOptions = baseOptions.driverOptions;
+    } else if (cfg.driverOptions) {
+      if (cfg.driverOptions.headless === undefined) {
+        cfg.driverOptions.headless = baseOptions.driverOptions.headless;
+      }
+      if (cfg.driverOptions.screen === undefined) {
+        cfg.driverOptions.screen = baseOptions.driverOptions.screen;
+      } else if (cfg.driverOptions.screen) {
+        if (cfg.driverOptions.screen.width === undefined) {
+          cfg.driverOptions.screen.width = baseOptions.driverOptions.screen.width;
+        } 
+        if (cfg.driverOptions.screen.height === undefined) {
+          cfg.driverOptions.screen.height = baseOptions.driverOptions.screen.height;
         }
-        if (this.options.domCheck.timeout === undefined) {
-          this.options.domCheck.timeout = defaultOptions.domCheck.timeout;
-        }
-        if (this.options.domCheck.interval === undefined) {
-          this.options.domCheck.interval = defaultOptions.domCheck.interval;
-        }
       }
+    }
+    this.options = cfg;
   }
   public async getDriver() {
-    const screen = {
-      width: 640,
-      height: 480
-    };
+    const firefoxOptions = (this.options.driverOptions.headless ? new firefox.Options().headless() : new firefox.Options()).windowSize(this.options.driverOptions.screen);
+    firefoxOptions.setPreference("javascript.enabled", !this.options.disableJavascript);
     const driver = await new Builder().forBrowser(this.options.browser)
-      .setChromeOptions(new chrome.Options().headless().windowSize(screen))
-      .setFirefoxOptions(new firefox.Options().headless().windowSize(screen))
-      .build();
+    .setChromeOptions((this.options.driverOptions.headless ?  new chrome.Options().headless() : new chrome.Options()).windowSize(this.options.driverOptions.screen))
+    .setFirefoxOptions(firefoxOptions)
+    .build();
     return driver;
   }
   public async scrap(options: IScrapOptions): Promise<IScrapResult> {

@@ -10,7 +10,7 @@ little wrapper on **selenium-webdriver**[https://www.npmjs.com/package/selenium-
 const { Scrapper } = require("simple-webdriver-scrapper");
 
 const scrapper = new Scrapper({
-  // [optional] option to disable javascript. defaults to false
+  // [optional] option to disable javascript (ONLY for firefox). defaults to false
   disableJavascript: false, 
   // [optional] for choosing the underlying browser. defaults to firefox
   browser: "firefox",
@@ -44,7 +44,7 @@ console.log(text);// [string] the body text as of the last dom check
 const { Scrapper } = require("simple-webdriver-scrapper");
 
 const scrapper = new Scrapper({
-  // [optional] option to disable javascript. defaults to false
+  // [optional] option to disable javascript (ONLY for firefox). defaults to false
   disableJavascript: false, 
   // [optional] for choosing the underlying browser. defaults to firefox
   browser: "firefox",
@@ -74,7 +74,6 @@ console.log(equilibrium); // [boolean] true if equilibrium has been reach
 console.log(checks);  // [number] the number of dom checks done
 console.log(html); // [string] the html as of the last dom check
 console.log(text);// [string] the body text as of the last dom check
-
 const { text2, html2, checks2, equilibrium2, driver } = 
   await scrapper.scrap({
     url: // url you want to scrap,
