@@ -1,9 +1,10 @@
-/* tslint:enable */
 import {EventEmitter} from "events";
-import { Builder } from "selenium-webdriver";
+import {Builder} from "selenium-webdriver";
 /* tslint:disable */
 import * as chrome from "selenium-webdriver/chrome";
 import * as firefox from "selenium-webdriver/firefox";
+
+/* tslint:enable */
 
 export interface IScrapperOptions {
   disableJavascript?: boolean;
@@ -20,7 +21,7 @@ export interface IScrapperOptions {
       width?: number;
       height?: number;
     }
-  }
+  };
 }
 
 export interface IScrapOptions {
@@ -59,11 +60,13 @@ export const newDefaultOptions = () => {
 
 export class Scrapper extends EventEmitter {
   public options: IScrapperOptions;
+
   public constructor(options?: IScrapperOptions) {
     super();
     this.options = newDefaultOptions();
     this.configure(options);
   }
+
   public configure(cfg?: IScrapperOptions) {
     const baseOptions = this.options;
     if (!cfg) {
@@ -102,7 +105,7 @@ export class Scrapper extends EventEmitter {
       } else if (cfg.driverOptions.screen) {
         if (cfg.driverOptions.screen.width === undefined) {
           cfg.driverOptions.screen.width = baseOptions.driverOptions.screen.width;
-        } 
+        }
         if (cfg.driverOptions.screen.height === undefined) {
           cfg.driverOptions.screen.height = baseOptions.driverOptions.screen.height;
         }
@@ -110,15 +113,20 @@ export class Scrapper extends EventEmitter {
     }
     this.options = cfg;
   }
+
   public async getDriver() {
-    const firefoxOptions = (this.options.driverOptions.headless ? new firefox.Options().headless() : new firefox.Options()).windowSize(this.options.driverOptions.screen);
+    const firefoxOptions =
+      (this.options.driverOptions.headless ? new firefox.Options().headless() : new firefox.Options())
+        .windowSize(this.options.driverOptions.screen);
     firefoxOptions.setPreference("javascript.enabled", !this.options.disableJavascript);
-    const driver = await new Builder().forBrowser(this.options.browser)
-    .setChromeOptions((this.options.driverOptions.headless ?  new chrome.Options().headless() : new chrome.Options()).windowSize(this.options.driverOptions.screen))
-    .setFirefoxOptions(firefoxOptions)
-    .build();
-    return driver;
+    return new Builder().forBrowser(this.options.browser)
+      .setChromeOptions(
+        (this.options.driverOptions.headless ? new chrome.Options().headless() : new chrome.Options())
+          .windowSize(this.options.driverOptions.screen))
+      .setFirefoxOptions(firefoxOptions)
+      .build();
   }
+
   public async scrap(options: IScrapOptions): Promise<IScrapResult> {
     if (!options.url && !options.driver) {
       throw new Error("not passing driver and url is not allowed!");
@@ -135,7 +143,7 @@ export class Scrapper extends EventEmitter {
         while (
           new Date().getTime() < stopMS &&
           equilibriumCount < this.options.domCheck.equilibriumThreshold
-        ) {
+          ) {
           await this.sleep(this.options.domCheck.interval);
           const result = await this.updateResult(driver, lastResult);
           if (result.equilibrium) {
@@ -164,6 +172,7 @@ export class Scrapper extends EventEmitter {
       throw e;
     }
   }
+
   private async sleep(ms: number) {
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -171,16 +180,17 @@ export class Scrapper extends EventEmitter {
       }, ms);
     });
   }
+
+  // noinspection JSMethodCanBeStatic
   private async updateResult(driver: any, lastResult: IScrapResult): Promise<IScrapResult> {
     const html = await driver.getPageSource();
     const text = await driver.executeScript(`return document.body.innerText;`);
-    const ret = {
+    return {
       html,
       checks: lastResult ? lastResult.checks + 1 : 1,
       driver,
       equilibrium: lastResult ? html === lastResult.html && text === lastResult.text : false,
       text
     };
-    return ret;
   }
 }
