@@ -1,8 +1,8 @@
-import { expect } from "chai";
-import { describe, it } from "mocha";
+import {expect} from "chai";
+import {describe, it} from "mocha";
 import * as path from "path";
 
-describe("check changes", function () {
+describe("check changes", function() {
   let lastDriver = null;
   this.timeout(60 * 1000);
   it("interval30s.html with domcheck's timeout of 10s should return text=10 with equilibrium failed", (done) => {
@@ -69,4 +69,4 @@ describe("check changes", function () {
     };
     test().then(done).catch(done);
   });
-})
+});

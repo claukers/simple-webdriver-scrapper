@@ -1,18 +1,13 @@
-import { expect } from "chai";
-import { describe, it, before, after } from 'mocha';
-import * as sinon from 'sinon';
+import {expect} from "chai";
+import {describe, it, before, after} from 'mocha';
 import * as rewiremock from 'rewiremock';
-import * as path from "path";
 
-describe("configure unit tests", function () {
+describe("configure unit tests", function() {
   let lastDriver = null;
   this.timeout(60 * 1000);
-  const fakeBuilder = {
-  };
-  const fakeFirefox = {
-  };
-  const fakeChrome= {
-  };
+  const fakeBuilder = {};
+  const fakeFirefox = {};
+  const fakeChrome = {};
   before((done) => {
     rewiremock.default.disable();
     rewiremock.default.enable();
@@ -29,31 +24,29 @@ describe("configure unit tests", function () {
     rewiremock.default.disable();
     done();
   });
-  
-const defaultOptions = {
-  disableJavascript: false,
-  browser: "firefox",
-  keepDriverAlive: false,
-  domCheck: {
-    equilibriumThreshold: 3,
-    timeout: 60000,
-    interval: 1000
-  },
-  driverOptions: {
-    headless: true,
-    screen: {
-      width: 1920,
-      height: 1080
+
+  const defaultOptions = {
+    disableJavascript: false,
+    browser: "firefox",
+    keepDriverAlive: false,
+    domCheck: {
+      equilibriumThreshold: 3,
+      timeout: 60000,
+      interval: 1000
+    },
+    driverOptions: {
+      headless: true,
+      screen: {
+        width: 1920,
+        height: 1080
+      }
     }
-  }
-};
-  
+  };
+
   const combinations = [
     {
       name: `all options are optional`,
-      passing: {
-        
-      },
+      passing: {},
       expecting: defaultOptions
     },
     {
@@ -61,8 +54,7 @@ const defaultOptions = {
       passing: {
         browser: "chrome",
         driverOptions: {
-          screen: {
-          }
+          screen: {}
         }
       },
       expecting: {
@@ -212,7 +204,7 @@ const defaultOptions = {
             height: defaultOptions.driverOptions.screen.height
           }
         }
-      } 
+      }
     },
     {
       name: `change browser and disableJavascript`,
@@ -236,7 +228,7 @@ const defaultOptions = {
             height: defaultOptions.driverOptions.screen.height
           }
         }
-      } 
+      }
     },
     {
       name: `disableJavascript only`,
@@ -282,8 +274,8 @@ const defaultOptions = {
       }
     }
   ];
-  
-  for(const combination of combinations) {
+
+  for (const combination of combinations) {
     it(`test case configure with ctr [${combination.name}]`, (done) => {
       const test = async () => {
         const lib = require("../src");
@@ -302,7 +294,7 @@ const defaultOptions = {
       test().then(done).catch(done);
     });
     const isTwoPass = combination.passing2 && combination.expecting2;
-    it(`test case configure with configure method ${isTwoPass ? `two times `:""}with empty ctr args [${combination.name}]`, (done) => {
+    it(`test case configure with configure method ${isTwoPass ? `two times ` : ""}with empty ctr args [${combination.name}]`, (done) => {
       const test = async () => {
         const lib = require("../src");
         const scrapper = new lib.Scrapper();
@@ -317,7 +309,7 @@ const defaultOptions = {
         expect(actual.driverOptions.headless).to.be.equal(combination.expecting.driverOptions.headless);
         expect(actual.driverOptions.screen.width).to.be.equal(combination.expecting.driverOptions.screen.width);
         expect(actual.driverOptions.screen.height).to.be.equal(combination.expecting.driverOptions.screen.height);
-        if(isTwoPass) {
+        if (isTwoPass) {
           scrapper.configure(combination.passing2);
           const actual2 = scrapper.options;
           expect(actual2.disableJavascript).to.be.equal(combination.expecting2.disableJavascript);

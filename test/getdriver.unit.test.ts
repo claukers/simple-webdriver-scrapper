@@ -1,55 +1,59 @@
-import { expect } from "chai";
-import { describe, it, before, after } from 'mocha';
-import * as sinon from 'sinon';
+import {expect} from "chai";
+import {describe, it, before, after} from 'mocha';
 import * as rewiremock from 'rewiremock';
-import * as path from "path";
 
-describe("getdriver unit tests", function () {
+describe("getdriver unit tests", function() {
   let lastDriver = null;
   let fheadlessCalledCount = 0;
-  let fwindowSizeCalledCount = 0
+  let fwindowSizeCalledCount = 0;
   let fwindowSizeArg = undefined;
   let cheadlessCalledCount = 0;
-  let cwindowSizeCalledCount = 0
+  let cwindowSizeCalledCount = 0;
   let cwindowSizeArg = undefined;
   this.timeout(60 * 1000);
   const fakeBuilder = class FakeBuilder {
     forBrowser() {
       return this;
     }
+
     setFirefoxOptions() {
       return this;
     }
+
     setChromeOptions() {
       return this;
     }
+
     build() {
       return this;
     }
-  }
+  };
   const fakeFirefox = {
     Options: class FakeOptionsFirefox {
-      headless(){
+      headless() {
         fheadlessCalledCount++;
         return this;
       }
+
       setPreference(key, value) {
         return this;
       }
-      windowSize(arg){
+
+      windowSize(arg) {
         fwindowSizeCalledCount++;
         fwindowSizeArg = arg;
         return this;
       }
     }
   };
-  const fakeChrome= {
+  const fakeChrome = {
     Options: class FakeOptionsChrome {
-      headless(){
+      headless() {
         cheadlessCalledCount++;
         return this;
       }
-      windowSize(arg){
+
+      windowSize(arg) {
         cwindowSizeCalledCount++;
         cwindowSizeArg = arg;
         return this;
