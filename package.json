@@ -25,20 +25,20 @@
   },
   "homepage": "https://github.com/claukers/simple-webdriver-scrapper#readme",
   "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/node": "^11.13.18",
-    "@types/sinon": "^7.0.13",
+    "@types/chai": "^4.2.4",
+    "@types/node": "^11.15.2",
+    "@types/sinon": "^7.5.0",
     "chai": "^4.2.0",
-    "mocha": "^6.2.0",
+    "mocha": "^6.2.2",
     "nyc": "^14.1.1",
-    "rewiremock": "^3.13.7",
-    "rimraf": "^2.6.3",
-    "sinon": "^7.3.2",
-    "ts-node": "^8.3.0",
-    "tslint": "^5.18.0",
-    "typescript": "^3.5.3"
+    "rewiremock": "^3.13.9",
+    "rimraf": "^2.7.1",
+    "sinon": "^7.5.0",
+    "ts-node": "^8.4.1",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.4"
   },
   "dependencies": {
-    "selenium-webdriver": "^4.0.0-alpha.4"
+    "selenium-webdriver": "^4.0.0-alpha.5"
   }
 }
