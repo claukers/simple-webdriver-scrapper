@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8b141cbe-80d7-4205-9e9a-0be686d545b3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    <list default="true" id="8b141cbe-80d7-4205-9e9a-0be686d545b3" name="Default Changelist" comment="fixlint tests">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/checkchanges.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/checkchanges.test.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/configure.unit.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/configure.unit.test.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/getdriver.unit.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/getdriver.unit.test.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/scrap.unit.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/scrap.unit.test.ts" afterDir="false" />
@@ -52,8 +51,24 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1572715650866</updated>
-      <workItem from="1572715652642" duration="299000" />
+      <workItem from="1572715652642" duration="438000" />
+      <workItem from="1572716117426" duration="65000" />
     </task>
+    <task id="LOCAL-00001" summary="webstorm configuration">
+      <created>1572716047990</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1572716047990</updated>
+    </task>
+    <task id="LOCAL-00002" summary="updatre deps">
+      <created>1572716059450</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1572716059450</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -64,10 +79,18 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="webstorm configuration" />
+    <MESSAGE value="updatre deps" />
+    <MESSAGE value="fixlint tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixlint tests" />
   </component>
 </project>
