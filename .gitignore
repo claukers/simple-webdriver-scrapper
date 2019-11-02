@@ -8,7 +8,6 @@ log.txt
 dist/
 old/
 test/data/bla.log
-.idea
 query.js
 apidoc/
 .vscode/
