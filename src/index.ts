@@ -16,6 +16,7 @@ export interface IScrapperOptions {
     interval?: number;
   };
   driverOptions?: {
+    path?: string;
     headless?: boolean;
     screen?: {
       width?: number;
@@ -48,6 +49,7 @@ export const newDefaultOptions = () => {
       interval: 1000
     },
     driverOptions: {
+      path: undefined,
       headless: true,
       screen: {
         width: 1920,
@@ -100,6 +102,9 @@ export class Scrapper extends EventEmitter {
       if (cfg.driverOptions.headless === undefined) {
         cfg.driverOptions.headless = baseOptions.driverOptions.headless;
       }
+      if (cfg.driverOptions.path && cfg.browser !== "firefox") {
+        throw new Error(`you can only set driverOptions.path with firefox browser`);
+      }
       if (cfg.driverOptions.screen === undefined) {
         cfg.driverOptions.screen = baseOptions.driverOptions.screen;
       } else if (cfg.driverOptions.screen) {
@@ -119,10 +124,13 @@ export class Scrapper extends EventEmitter {
       (this.options.driverOptions.headless ? new firefox.Options().headless() : new firefox.Options())
         .windowSize(this.options.driverOptions.screen);
     firefoxOptions.setPreference("javascript.enabled", !this.options.disableJavascript);
+    const chromeOptions = (this.options.driverOptions.headless ? new chrome.Options().headless() : new chrome.Options())
+      .windowSize(this.options.driverOptions.screen);
+    if (this.options.driverOptions.path) {
+      firefoxOptions.setBinary(this.options.driverOptions.path);
+    }
     return new Builder().forBrowser(this.options.browser)
-      .setChromeOptions(
-        (this.options.driverOptions.headless ? new chrome.Options().headless() : new chrome.Options())
-          .windowSize(this.options.driverOptions.screen))
+      .setChromeOptions(chromeOptions)
       .setFirefoxOptions(firefoxOptions)
       .build();
   }
