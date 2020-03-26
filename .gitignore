@@ -13,3 +13,4 @@ apidoc/
 .vscode/
 /nbproject/private/
 geckodriver
+.idea/
