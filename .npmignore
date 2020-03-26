@@ -19,4 +19,6 @@ tslint.json
 tsconfig.json
 .editorconfig
 .nycrc
+drivers/
+*.kdev4
 geckodriver
